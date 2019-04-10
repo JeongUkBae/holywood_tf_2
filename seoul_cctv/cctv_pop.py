@@ -75,8 +75,9 @@ df_cctv_pop.set_index('구별',inplace=True)
 cor1 = np.corrcoef(df_cctv_pop['고령자비율'],df_cctv_pop['소계'])
 cor2 = np.corrcoef(df_cctv_pop['외국인비율'],df_cctv_pop['소계'])
 
-print("고령자비율 상관계수 {} \n 외국인비율 상관계수 {}"
-      .format(cor1, cor2))
+#print("고령자비율 상관계수 {} \n 외국인비율 상관계수 {}".format(cor1, cor2))
+
+df_cctv_pop.to_csv(ctx+'cctv_pop.csv')
 
 
 
