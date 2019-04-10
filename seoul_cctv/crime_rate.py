@@ -79,7 +79,7 @@ df_police_norm['검거'] = np.sum(df_police_norm[ls_rate], axis=1)
        '폭력검거율', '인구수', 'CCTV',
         '범죄', '검거']
 """
-font = 'C:/Windows/Fonts/NanumBarunGothic.ttf'
+font = 'C:/Windows/Fonts/malgun.ttf'
 font_name = font_manager.FontProperties(fname=font).get_name()
 print(font_name)
 rc('font'
@@ -89,7 +89,40 @@ sns.pairplot(df_police_norm
                  ,kind= 'reg'
                  ,height=3)
 
-plt.show()
+sns.pairplot(df_police_norm
+                 ,x_vars=["인구수","CCTV"]
+                 ,y_vars=["살인","강도"]
+                 ,kind= 'reg'
+                 ,height=3)
+
+tmp_max = df_police_norm['검거'].max()
+df_police_norm['검거'] = df_police_norm['검거'] / tmp_max * 100
+df_police_norm_sort = df_police_norm\
+    .sort_values(by="검거"
+                 ,ascending=False)
+plt.figure(figsize=(10,10))
+sns.heatmap(df_police_norm_sort[ls_rate]
+            , annot=True
+            ,fmt='f'
+            ,linewidths=5)
+plt.title('범죄 검거 비율')
+
+ls_crime = ['강간','강도','살인','절도','폭력','범죄']
+df_police_norm['범죄'] = df_police_norm['범죄'] / 5
+df_police_norm_sort = df_police_norm.sort_values(
+    by='범죄'
+    , ascending=False)
+plt.figure(figsize=(10,10))
+sns.heatmap(df_police_norm_sort[ls_crime]
+            ,annot=True
+            ,fmt='f'
+            ,linewidths=5)
+plt.title("범죄 비율")
+df_police_norm.to_csv(ctx+'police_norm.csv'
+                      ,sep=','
+                      ,encoding='UTF-8')
+
+
 
 
 
