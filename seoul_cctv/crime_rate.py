@@ -2,6 +2,7 @@ import pandas as pd
 import googlemaps
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib import font_manager, rc
 import seaborn as sns
 import folium
 from sklearn  import preprocessing
@@ -36,9 +37,6 @@ ls_rate = ['강간검거율','강도검거율','살인검거율','절도검거�
 for i in ls_rate:
     df_police.loc[df_police[i] > 100, i] = 100
 
-print(df_police)
-
-
 df_police.rename(columns = {'강간 발생':'강간'
                             ,'강도 발생':'강도'
                             ,'살인 발생':'살인'
@@ -55,6 +53,50 @@ min_max_scalar = preprocessing.MinMaxScaler()
 스케일링은 선형변환을 적용하여 전체 자료의 분포를
 평균 0, 분산 1이 되도록 만드는 과정
 """
+x_scaled = min_max_scalar.fit_transform(x.astype(float))
+df_police_norm = pd.DataFrame(x_scaled
+                              , columns=ls_crime
+                              , index=df_police.index)
+
+
+
+df_police_norm[ls_rate] = df_police[ls_rate]
+
+df_cctv_pop = pd.read_csv(ctx+'cctv_pop.csv'
+                          ,encoding='UTF-8'
+                          ,index_col='구별')
+
+
+
+df_police_norm[['인구수','CCTV']] = df_cctv_pop[['인구수','소계']]
+df_police_norm['범죄'] = np.sum(df_police_norm[ls_crime], axis=1)
+df_police_norm['검거'] = np.sum(df_police_norm[ls_rate], axis=1)
+
+"""
+['강간', '강도', '살인', '절도', '폭력',
+ '강간검거율', '강도검거율', '살인검거율',
+  '절도검거율',
+       '폭력검거율', '인구수', 'CCTV',
+        '범죄', '검거']
+"""
+font = 'C:/Windows/Fonts/NanumBarunGothic.ttf'
+font_name = font_manager.FontProperties(fname=font).get_name()
+print(font_name)
+rc('font'
+   ,family=font_name)
+sns.pairplot(df_police_norm
+                 ,vars=["강도","살인","폭력"]
+                 ,kind= 'reg'
+                 ,height=3)
+
+plt.show()
+
+
+
+
+
+
+
 
 
 
