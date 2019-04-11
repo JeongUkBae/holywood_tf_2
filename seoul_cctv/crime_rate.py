@@ -1,10 +1,8 @@
 import pandas as pd
-import googlemaps
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import font_manager, rc
 import seaborn as sns
-import folium
 from sklearn  import preprocessing
 
 ctx = '../data/'
